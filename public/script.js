@@ -1,65 +1,75 @@
 const socket = new WebSocket('ws://localhost:3000');
 
-const roomsList = document.getElementById('rooms-list');
-const newRoomInput = document.getElementById('new-room-name');
-const addRoomBtn = document.getElementById('add-room-btn');
+const usersList = document.getElementById('users-list');
+const newUserInput = document.getElementById('new-user-name');
+const addUserBtn = document.getElementById('add-user-btn');
 
 const chatDiv = document.getElementById('chat');
 const msgInput = document.getElementById('msg');
+const userSelect = document.getElementById('user-select');
 
-let currentRoom = '';
-const messages = {};
+let users = ['EuJean'];
+let messages = [];
 
-function renderRooms() {
-  roomsList.innerHTML = '';
-  for (const room of Object.keys(messages)) {
+function renderUsers() {
+  usersList.innerHTML = '';
+  for (const user of users) {
     const li = document.createElement('li');
-    li.textContent = room;
-    li.dataset.room = room;
-    li.classList.toggle('active', room === currentRoom);
-    li.style.cursor = 'pointer';
-    li.addEventListener('click', () => {
-      changeRoom(room);
-    });
-    roomsList.appendChild(li);
+    li.textContent = user;
+    li.classList.add('user-item');
+    li.title = `Usuário: ${user}`;
+    usersList.appendChild(li);
+  }
+}
+
+function renderUserSelect() {
+  userSelect.innerHTML = '';
+  for (const user of users) {
+    const option = document.createElement('option');
+    option.value = user;
+    option.textContent = user;
+    userSelect.appendChild(option);
   }
 }
 
 function renderMessages() {
   chatDiv.innerHTML = '';
-  if (!messages[currentRoom]) return;
-  for (const msg of messages[currentRoom]) {
-    const div = document.createElement('div');
-    div.textContent = msg;
-    chatDiv.appendChild(div);
+  for (const msg of messages) {
+    const msgEl = document.createElement('div');
+    msgEl.classList.add('chat-message');
+
+    const time = new Date(msg.timestamp).toLocaleTimeString();
+    msgEl.innerHTML = `
+      <span class="chat-room">[${msg.room}]</span>
+      <span class="chat-time">[${time}]</span>
+      <span class="chat-text">${sanitize(msg.text)}</span>
+    `;
+
+    chatDiv.appendChild(msgEl);
   }
   chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
-function changeRoom(room) {
-  currentRoom = room;
-  renderRooms();
-  renderMessages();
+function sanitize(text) {
+  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-addRoomBtn.addEventListener('click', () => {
-  const roomName = newRoomInput.value.trim();
-  if (!roomName) return alert('Digite um nome para a sala!');
-  if (messages[roomName]) {
-    alert('Essa sala já existe!');
-    return;
-  }
-  messages[roomName] = [];
-  newRoomInput.value = '';
-  changeRoom(roomName);
+addUserBtn.addEventListener('click', () => {
+  const newUser = newUserInput.value.trim();
+  if (!newUser) return alert('Digite o nome do usuário!');
+  if (users.includes(newUser)) return alert('Usuário já existe!');
+
+  users.push(newUser);
+  newUserInput.value = '';
+  renderUsers();
+  renderUserSelect();
 });
 
-msgInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter' && msgInput.value.trim() !== '') {
-    const text = msgInput.value.trim();
+msgInput.addEventListener('keypress', e => {
+  if (e.key === 'Enter' && msgInput.value.trim()) {
     const messageObj = {
-      room: currentRoom,
-      text,
+      room: userSelect.value,
+      text: msgInput.value.trim(),
       timestamp: new Date().toISOString(),
     };
     socket.send(JSON.stringify(messageObj));
@@ -68,7 +78,7 @@ msgInput.addEventListener('keypress', (e) => {
   }
 });
 
-socket.addEventListener('message', (event) => {
+socket.addEventListener('message', event => {
   try {
     const messageObj = JSON.parse(event.data);
     addMessageLocally(messageObj);
@@ -78,13 +88,9 @@ socket.addEventListener('message', (event) => {
 });
 
 function addMessageLocally(messageObj) {
-  const { room, text, timestamp } = messageObj;
-  if (!messages[room]) messages[room] = [];
-  const time = new Date(timestamp).toLocaleTimeString();
-  messages[room].push(`[${time}] ${text}`);
-
-  if (room === currentRoom) {
-    renderMessages();
-  }
+  messages.push(messageObj);
+  renderMessages();
 }
 
+renderUsers();
+renderUserSelect();

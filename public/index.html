@@ -2,48 +2,36 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Chat com Salas Dinâmicas</title>
+  <title>OqueZap2</title>
   <link rel="stylesheet" href="style.css" />
+  
 </head>
 <body>
   <h1>Chat UDP</h1>
 
   <div id="container">
-
-    <div id="rooms">
-      <h2>Salas</h2>
-      <ul id="rooms-list">
-        
-      </ul>
-      <input
-        type="text"
-        id="new-room-name"
-        placeholder="Digite o seu nome"
-        autocomplete="off"
-      />
-      <button id="add-room-btn">Adicionar Sala</button>
+    <div id="users">
+      <h2>Usuários</h2>
+      <ul id="users-list"></ul>
+      <input type="text" id="new-user-name" placeholder="Novo usuário" autocomplete="off" />
+      <button id="add-user-btn">Adicionar Usuário</button>
     </div>
-<div id="container" style="display: flex; gap: 20px;">
 
-  <div id="rooms" style="width: 150px;">
-    <h2>Salas</h2>
-    <ul id="rooms-list"></ul>
-    <input type="text" id="new-room-name" placeholder="Nova sala" autocomplete="off" />
-    <button id="add-room-btn">Adicionar Sala</button>
-  </div>
+    <div id="chat-container">
+      <h2>Feed de Mensagens (Todos os Usuários)</h2>
+      <div id="chat"></div>
 
-  <div id="chat-container" style="flex: 1; display: flex; flex-direction: column;">
-    <h2>Feed de mensagens (Todas as Salas)</h2>
-    <div id="chat" style="flex: 1; border: 1px solid #ccc; border-radius: 5px; padding: 10px; overflow-y: auto; background: white;"></div>
-
-    <div style="margin-top: 10px;">
-      <select id="room-select"></select>
-      <input type="text" id="msg" placeholder="Digite sua mensagem e pressione Enter..." autocomplete="off" style="width: 70%; margin-left: 10px;" />
+      <div style="margin-top: 10px;">
+        <select id="user-select"></select>
+        <input
+          type="text"
+          id="msg"
+          placeholder="Digite sua mensagem e pressione Enter..."
+          autocomplete="off"
+        />
+      </div>
     </div>
   </div>
-
-</div>
-
 
   <script src="script.js"></script>
 </body>

@@ -9,17 +9,14 @@ const wss = new WebSocket.Server({ server });
 
 const clients = new Set();
 
-// Servir os arquivos da pasta "public"
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Lógica de WebSocket
 wss.on('connection', (ws) => {
   clients.add(ws);
   console.log('Novo cliente conectado');
 
   ws.on('message', (message) => {
     console.log(`Mensagem recebida: ${message}`);
-    // Enviar a mensagem para todos os outros clientes
     for (let client of clients) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
@@ -33,7 +30,6 @@ wss.on('connection', (ws) => {
   });
 });
 
-// Iniciar o servidor
 const PORT = 3000;
 server.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
