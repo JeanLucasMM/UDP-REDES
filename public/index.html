@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat com Salas Dinâmicas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Chat UDP</h1>
+
+  <div id="container">
+
+    <div id="rooms">
+      <h2>Salas</h2>
+      <ul id="rooms-list">
+        
+      </ul>
+      <input
+        type="text"
+        id="new-room-name"
+        placeholder="Digite o seu nome"
+        autocomplete="off"
+      />
+      <button id="add-room-btn">Adicionar Sala</button>
+    </div>
+<div id="container" style="display: flex; gap: 20px;">
+
+  <div id="rooms" style="width: 150px;">
+    <h2>Salas</h2>
+    <ul id="rooms-list"></ul>
+    <input type="text" id="new-room-name" placeholder="Nova sala" autocomplete="off" />
+    <button id="add-room-btn">Adicionar Sala</button>
+  </div>
+
+  <div id="chat-container" style="flex: 1; display: flex; flex-direction: column;">
+    <h2>Feed de mensagens (Todas as Salas)</h2>
+    <div id="chat" style="flex: 1; border: 1px solid #ccc; border-radius: 5px; padding: 10px; overflow-y: auto; background: white;"></div>
+
+    <div style="margin-top: 10px;">
+      <select id="room-select"></select>
+      <input type="text" id="msg" placeholder="Digite sua mensagem e pressione Enter..." autocomplete="off" style="width: 70%; margin-left: 10px;" />
+    </div>
+  </div>
+
+</div>
+
+
+  <script src="script.js"></script>
+</body>
+</html>
