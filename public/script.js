@@ -83,7 +83,7 @@ socket.addEventListener('message', event => {
     const messageObj = JSON.parse(event.data);
     addMessageLocally(messageObj);
   } catch (err) {
-    console.error('Erro ao receber mensagem:', err);
+    console.error('Erro ao reseber mensagem:', err);
   }
 });
 
